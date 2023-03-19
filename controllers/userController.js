@@ -4,19 +4,19 @@ const _ = require('lodash')
 const express = require('express');
 const { User, validate } = require('../model/user.model')
 //Creating a Router
-var router = express.Router();
+var app = express.Router();
 
 //get users
-router.get('/all', async (req, res) => {
+app.get('/all', async (req, res) => {
     const users = await User.find().sort({ name: 1 });
 
     return res.send(users)
 });
-router.get('/:email', async (req, res) => {
+app.get('/:email', async (req, res) => {
     const users = await User.find({ email: req.params.email });
     return res.send(users)
 });
-router.post('/', async (req, res) => {
+app.post('/register', async (req, res) => {
     const { error } = validate(req.body)
     if (error) return res.send(error.details[0]
         .message).status(400)
@@ -39,4 +39,4 @@ router.post('/', async (req, res) => {
     return res.send(_.pick(user, ['_id', 'name', 'email', 'isAdmin'])).status(201)
 });
 
-module.exports = router;
+module.exports = app;
